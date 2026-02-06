@@ -302,6 +302,9 @@ cat > "$OUTPUT_HTML" << 'HTMLEOF'
         .popup-issue-location { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; font-family: monospace; font-size: 13px; }
         .popup-issue-location .file { color: #58a6ff; }
         .popup-issue-location .line { color: #d29922; }
+        .cursor-link { color: #58a6ff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 4px; background: #21262d; transition: all 0.2s; }
+        .cursor-link:hover { background: #388bfd; color: #fff; text-decoration: none; }
+        .cursor-link .icon { font-size: 12px; opacity: 0.7; }
         .popup-issue-code { background: #0d1117; border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
         .popup-issue-code pre { margin: 0; padding: 12px 15px; font-family: 'SF Mono', Monaco, monospace; font-size: 12px; line-height: 1.4; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
         .popup-issue-fix { background: #1c3a2a; padding: 10px 15px; border-radius: 6px; font-size: 12px; color: #3fb950; }
@@ -479,7 +482,7 @@ cat > "$OUTPUT_HTML" << 'HTMLEOF'
                 document.getElementById('summaryTable').innerHTML = '<div class="no-issues"><h2>✅ No Security Issues Found</h2><p>Great job! Your code passed all security checks.</p></div>';
             }
             
-            document.getElementById('footer').innerHTML = `Generated on ${new Date().toLocaleString()} • Gosec v${version} • ${stats.files || 0} files • ${(stats.lines || 0).toLocaleString()} lines<br><span style="color:#484f58">Click on any rule row to view detailed issues</span><br><span style="color:#58a6ff;margin-top:8px;display:inline-block;">Developed by dhanibaharzah</span>`;
+            document.getElementById('footer').innerHTML = `Generated on ${new Date().toLocaleString()} • Gosec v${version} • ${stats.files || 0} files • ${(stats.lines || 0).toLocaleString()} lines<br><span style="color:#484f58">Click on any rule row to view detailed issues • Click file paths to open in Cursor</span><br><span style="color:#58a6ff;margin-top:8px;display:inline-block;">Developed by dhanibaharzah</span>`;
         }
 
         function escapeHtml(text) {
@@ -548,8 +551,11 @@ cat > "$OUTPUT_HTML" << 'HTMLEOF'
                             <span class="priority-badge priority-${issue.priority}">${getPriorityLabel(issue.priority)}</span>
                         </div>
                         <div class="popup-issue-location">
-                            <span class="file">${file}</span>
-                            <span class="line">Line ${issue.line}</span>
+                            <a class="cursor-link" href="cursor://file/${issue.file}:${issue.line}${issue.column ? ':' + issue.column : ''}" title="Open in Cursor at line ${issue.line}">
+                                <span class="icon">📂</span>
+                                <span class="file">${file}</span>
+                                <span class="line">:${issue.line}${issue.column ? ':' + issue.column : ''}</span>
+                            </a>
                             <a class="cwe-link" href="${issue.cwe.url}" target="_blank" onclick="event.stopPropagation()">CWE-${issue.cwe.id}</a>
                         </div>
                         <div class="popup-issue-code"><pre>${escapeHtml(issue.code)}</pre></div>

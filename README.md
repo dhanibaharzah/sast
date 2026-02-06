@@ -141,6 +141,7 @@ sast:
 - **🔍 Clickable Rows** - Click any rule to see all issues in a popup
 - **ⓘ Info Icons** - Click to learn about each security rule
 - **🎯 Filter by Priority** - Filter issues within the popup
+- **📂 Open in Cursor** - Click file paths to open directly in Cursor IDE at the exact line
 - **📱 Responsive** - Works on desktop and mobile
 
 ---
